@@ -1,0 +1,10 @@
+flask
+tox
+tox-travis
+flask-wtf
+python-dotenv
+flask-wtf
+flask-sqlalchemy
+flask-migrate
+flask-login
+flask-bootstrap
