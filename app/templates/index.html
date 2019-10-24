@@ -3,5 +3,10 @@
 
 {% block app_content %}
     <h1>Spell Checker</h1>
+
+    {% if status %}
+        <div id="success"><p><strong>{{ status }}</strong></div>
+    {% endif %}
+
     <p>To get started using the spell checker please login or register.</p>
 {% endblock %}

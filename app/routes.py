@@ -13,7 +13,7 @@ def index():
 # @app.route('/')
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    status = None
+    result = None
 
     if current_user.is_authenticated:
         return redirect(url_for('index'))
@@ -28,7 +28,8 @@ def login():
             result = 'Two-factor authentication failure'
             return render_template('login.html', title='Sign In', form=form, status=result)
         login_user(user, remember=form.remember_me.data)
-        return redirect(url_for('spell_check'))
+        result = 'Login Success'
+        return render_template('index.html', title='Home Page', status=result)
     return render_template('login.html', title='Sign In', form=form)
 
 @app.route('/logout')
@@ -38,8 +39,11 @@ def logout():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    result = None
+
     if current_user.is_authenticated:
         return redirect(url_for('index'))
+
     form = RegistrationForm()
     if form.validate_on_submit():
         if form.email.data == "":
@@ -50,8 +54,8 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Congratulations, you are now a registered user!')
-        return redirect(url_for('login'))
+        result = 'Success! Congratulations, you are now a registered user!'
+        return render_template('index.html', title='Home Page', status=result)
     return render_template('register.html', title='Register', form=form)
 
 @app.route('/spell_check')
