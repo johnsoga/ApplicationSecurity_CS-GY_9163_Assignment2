@@ -3,6 +3,11 @@
 
 {% block app_content %}
     <h1>Sign In</h1>
+
+    {% if status %}
+        <div id="success"><p><strong>{{ status }}</strong></div>
+    {% endif %}
+
     <div class="row">
         <div class="col-md-4">
             {{ wtf.quick_form(form) }}
