@@ -46,6 +46,10 @@ def register():
 
     form = RegistrationForm()
     if form.validate_on_submit():
+        tmp = User.query.filter_by(username=form.username.data).first()
+        if tmp is not None:
+            result = 'Failure! Please use a different username.'
+            return render_template('register.html', title='Register', form=form, status=result)
         if form.email.data == "":
             email_value=None
         else:
@@ -56,7 +60,7 @@ def register():
         db.session.commit()
         result = 'Success! Congratulations, you are now a registered user!'
         return render_template('index.html', title='Home Page', status=result)
-    return render_template('register.html', title='Register', form=form)
+    return render_template('register.html', title='Register', form=form, status=result)
 
 @app.route('/spell_check')
 @login_required

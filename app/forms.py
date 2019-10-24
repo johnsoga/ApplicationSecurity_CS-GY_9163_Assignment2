@@ -18,12 +18,12 @@ class RegistrationForm(FlaskForm):
     auth_2fa = StringField('Two Factor Authentication', validators=[DataRequired()], id="2fa")
     submit = SubmitField('Register')
 
-    def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user is not None:
-            raise ValidationError('Please use a different username.')
+    # def validate_username(self, username):
+    #     user = User.query.filter_by(username=username.data).first()
+    #     if user is not None:
+    #         raise ValidationError('Please use a different username.')
 
-    def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
-        if user is not None:
-            raise ValidationError('Please use a different email address.')
+    # def validate_email(self, email):
+    #     user = User.query.filter_by(email=email.data).first()
+    #     if user is not None:
+    #         raise ValidationError('Please use a different email address.')
