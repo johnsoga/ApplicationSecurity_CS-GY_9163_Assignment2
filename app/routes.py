@@ -59,7 +59,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         result = 'Success! Congratulations, you are now a registered user!'
-        return render_template('index.html', title='Home Page', status=result)
+        return render_template('register.html', title='Home Page', status=result)
     return render_template('register.html', title='Register', form=form, status=result)
 
 @app.route('/spell_check')
