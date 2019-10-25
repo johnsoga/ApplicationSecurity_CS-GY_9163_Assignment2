@@ -28,7 +28,7 @@ def login():
             result = 'Two-factor authentication failure'
             return render_template('login.html', title='Sign In', form=form, status=result)
         login_user(user, remember=form.remember_me.data)
-        result = 'Login Success'
+        result = 'success'
         return render_template('index.html', title='Home Page', status=result)
     return render_template('login.html', title='Sign In', form=form)
 
