@@ -14,7 +14,7 @@ class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()], id="uname")
     email = StringField('Email', validators=[Email(), Optional()])
     password = PasswordField('Password', validators=[DataRequired()], id="pword")
-    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    # password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
     auth_2fa = StringField('Two Factor Authentication', validators=[DataRequired()], id="2fa")
     submit = SubmitField('Register')
 
