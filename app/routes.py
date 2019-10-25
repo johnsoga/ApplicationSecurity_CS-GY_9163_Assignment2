@@ -1,16 +1,18 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
-from app.forms import LoginForm, RegistrationForm
+from app.forms import LoginForm, RegistrationForm, SpellCheckForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User
 from werkzeug.urls import url_parse
+import subprocess
+import os, sys
+
 
 @app.route('/index')
 @app.route('/')
 def index():
     return render_template("index.html", title='Home Page')
 
-# @app.route('/')
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     result = None
@@ -62,7 +64,21 @@ def register():
         return render_template('register.html', title='Home Page', status=result)
     return render_template('register.html', title='Register', form=form, status=result)
 
-@app.route('/spell_check')
+@app.route('/spell_check', methods=['GET', 'POST'])
 @login_required
 def spell_check():
-    return render_template('spell_check.html', title='Spell Check')
+    result = None
+
+    form = SpellCheckForm()
+    if form.validate_on_submit():
+        user_text = form.words_to_check.data
+        input_file = open('input.txt', 'w')
+        input_file.write(user_text)
+        input_file.close()
+        curr_dir = os.getcwd()
+        p1 = subprocess.Popen(['./a.out', 'input.txt','wordlist.txt'], cwd=curr_dir, stdout=subprocess.PIPE)
+        out, err = p1.communicate()
+        output = out.decode("utf-8").rstrip()
+        print(output)
+        return render_template('spell_check.html', title='Spell Check', user_text=user_text, misspelled=output)
+    return render_template('spell_check.html', title='Spell Check', form=form, status=result)
