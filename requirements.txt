@@ -4,6 +4,5 @@ tox-travis
 flask-wtf
 python-dotenv
 flask-sqlalchemy
-flask-migrate
 flask-login
 flask-bootstrap

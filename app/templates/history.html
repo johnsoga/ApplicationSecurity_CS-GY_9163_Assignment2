@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <h1>History</h1>
+
+    {% if query_count %}
+        <p id="numqueries"><strong>{{ query_count }}</strong>
+    {% endif %}
+
+    <tbody>
+    {% for query in query_result %}
+        <tr>
+            <td>{{query['query_id']}}</td>
+            <td>{{query['user_query']}}</td>
+        </tr>
+        <!-- <p id="query_result"><strong>{{ query_result }}</strong> -->
+    {% endfor %}
+    </tbody>
+
+    <div class="row">
+        <div class="col-md-4">
+            {% if form %}
+                {{ wtf.quick_form(form) }}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

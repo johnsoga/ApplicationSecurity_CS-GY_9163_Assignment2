@@ -3,6 +3,8 @@ from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from app import login
+from sqlalchemy.sql import func
+
 
 class User(UserMixin, db.Model):
 
@@ -22,6 +24,34 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
+
+class UserLogin(UserMixin, db.Model):
+
+    __tablename__ = 'login'
+
+    login_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.ForeignKey('users.id'), nullable=False)
+    time_login = db.Column(db.DateTime, nullable=False, server_default=func.now())
+    session_token = db.Column(db.String(128))
+
+class UserLogout(UserMixin, db.Model):
+
+    __tablename__ = 'logout'
+
+    logout_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.ForeignKey('users.id'), nullable=False)
+    time_logout = db.Column(db.DateTime, nullable=False, server_default=func.now())
+    session_token = db.Column(db.String(128))
+
+class UserQuery(UserMixin, db.Model):
+
+    __tablename__ = 'user_queries'
+
+    query_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.ForeignKey('users.id'), nullable=False)
+    user_query = db.Column(db.Text)
+    query_result = db.Column(db.Text)
+
 
 @login.user_loader
 def load_user(id):
