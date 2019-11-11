@@ -3,3 +3,4 @@ migrations
 app.db
 input.txt
 wordlist.txt
+app.db;
