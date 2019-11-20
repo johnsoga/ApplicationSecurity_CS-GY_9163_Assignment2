@@ -19,20 +19,13 @@
             {% for query in query_result %}
             <tr>
                 <th scope="row" id="query{{query['query_id']}}">
-                    {{query['query_id']}}
+                    <a href="/history/query{{query['query_id']}}">{{query['query_id']}}</a>
                 </th>
                 <td>
-                    {{query['user_query']}}
+                    <a href="/history/query{{query['query_id']}}">{{query['user_query']}}
                 </td>
             </tr>
             {% endfor %}
         </tbody>
-
-    <div class="row">
-        <div class="col-md-4">
-            {% if form %}
-                {{ wtf.quick_form(form) }}
-            {% endif %}
-        </div>
-    </div>
+    </table>
 {% endblock %}

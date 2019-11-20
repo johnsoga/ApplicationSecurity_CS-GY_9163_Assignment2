@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <h1>History</h1>
+
+    {% if query_id %}
+        <p id="queryid"><strong>Query ID: </strong>{{ query_id }}
+    {% endif %}
+
+    {% if username %}
+        <p id="username"><strong>Username: </strong>{{ username }}
+    {% endif %}
+
+    {% if query_request %}
+        <p id="querytext"><strong>Request: </strong>{{ query_request }}
+    {% endif %}
+
+        <p id="queryresults"><strong>Result: </strong>{{ query_result }}
+
+{% endblock %}

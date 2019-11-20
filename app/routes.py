@@ -97,6 +97,16 @@ def spell_check():
 def history():
     query_count = UserQuery.query.filter_by(user_id=session['user_id']).count()
     query_result = UserQuery.query.filter_by(user_id=session['user_id']).all()
-
-    # query = UserQuery.query.select([user_queries.c.query_id, user_queries.c.user_query], user_queries.c.user_id == session['user_id'])
     return render_template('history.html', title='History', query_count=query_count, query_result=query_result)
+
+@app.route('/history/query<int:query_id>')
+@login_required
+def query(query_id):
+    user = User.query.filter_by(id=session['user_id']).first()
+    username = user.username
+    userQuery = UserQuery.query.filter_by(user_id=session['user_id'], query_id=query_id).first()
+    query_request = userQuery.user_query
+    query_result = userQuery.query_result
+    print(session)
+
+    return render_template('query.html', title='Query', query_id=query_id, username=username, query_request=query_request, query_result=query_result)
