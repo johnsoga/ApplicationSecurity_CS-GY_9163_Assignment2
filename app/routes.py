@@ -2,11 +2,11 @@ from flask import render_template, flash, redirect, url_for, request, session
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, SpellCheckForm
 from flask_login import current_user, login_user, logout_user, login_required, decode_cookie
-from app.models import User, UserLogin, UserLogout, UserQuery
+from app.models import User, UserLogin, UserQuery
 from werkzeug.urls import url_parse
 from sqlalchemy.sql import func
 import subprocess
-import os, sys
+import os, sys, secrets
 
 
 @app.route('/index')
@@ -31,7 +31,8 @@ def login():
             result = 'Two-factor authentication failure'
             return render_template('login.html', title='Sign In', form=form, status=result)
         login_user(user, remember=form.remember_me.data)
-        user_login = UserLogin(user_id=user.id, session_token=session['_id'])
+        session['user_token'] = secrets.token_urlsafe(32)
+        user_login = UserLogin(user_id=user.id, session_token=session.get('user_token'))
         db.session.add(user_login)
         db.session.commit()
         result = 'success'
@@ -40,10 +41,16 @@ def login():
 
 @app.route('/logout')
 def logout():
-    user_logout = UserLogout(user_id=session['user_id'], session_token=session['_id'])
+    # user_logout = UserLogout(user_id=session['user_id'], session_token=session.get('user_token'))
     logout_user()
-    db.session.add(user_logout)
+    user = UserLogin.query.filter_by(session_token=session.get('user_token')).first()
+    user.time_logout = func.now()
+    #
+    # db.session.query().filter(login.user_id == user_id=session['user_id']).update({"time_logout": 'func.now()'})
+    # user.no_of_logins = User.no_of_logins + 1
+
     db.session.commit()
+    session.pop('user_token', None)
     return redirect(url_for('index'))
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -107,6 +114,32 @@ def query(query_id):
     userQuery = UserQuery.query.filter_by(user_id=session['user_id'], query_id=query_id).first()
     query_request = userQuery.user_query
     query_result = userQuery.query_result
-    print(session)
 
     return render_template('query.html', title='Query', query_id=query_id, username=username, query_request=query_request, query_result=query_result)
+
+@app.route('/login_history', methods=['GET', 'POST'])
+@login_required
+def login_history():
+        user = User.query.filter_by(id=session['user_id']).first()
+        username = user.username
+
+        if username != "admin":
+            return render_template("index.html", title='Home Page')
+
+        form = LoginHistoryForm()
+        if form.validate_on_submit():
+            user = User.query.filter_by(username=form.username.data).first()
+            user_id = user.id
+            # q = (session.query(UserLogin, UserLogout)
+            #             .join(UserLogin)
+            #             .join(UserLogout)
+            #             .filter(UserLogin.user_id == UserLogout.user_id)
+            #             .order_by(Group.number)
+            #             .order_by(Member.number)
+            #             ).all()
+            # UserLogin = UserQuery.query.filter_by(user_id=session['user_id'], query_id=query_id).first()
+            #     query_request = userQuery.user_query
+            #     query_result = userQuery.query_result
+
+            return render_template('index.html', title='Home Page', status=result)
+        return render_template('login.html', title='Sign In', form=form)

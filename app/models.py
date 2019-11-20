@@ -32,16 +32,8 @@ class UserLogin(UserMixin, db.Model):
     login_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.ForeignKey('users.id'), nullable=False)
     time_login = db.Column(db.DateTime, nullable=False, server_default=func.now())
-    session_token = db.Column(db.String(128))
-
-class UserLogout(UserMixin, db.Model):
-
-    __tablename__ = 'logout'
-
-    logout_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.ForeignKey('users.id'), nullable=False)
-    time_logout = db.Column(db.DateTime, nullable=False, server_default=func.now())
-    session_token = db.Column(db.String(128))
+    time_logout = db.Column(db.DateTime, nullable=True)
+    session_token = db.Column(db.String(32))
 
 class UserQuery(UserMixin, db.Model):
 

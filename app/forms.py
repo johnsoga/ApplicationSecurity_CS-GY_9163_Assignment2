@@ -20,3 +20,7 @@ class RegistrationForm(FlaskForm):
 class SpellCheckForm(FlaskForm):
     words_to_check = TextAreaField('Words To Check', validators=[Optional(), Length(max=200)], id="inputtext")
     submit = SubmitField('Spell Check')
+
+class LoginHistoryForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()], id="userid")
+    submit = SubmitField('Search')
