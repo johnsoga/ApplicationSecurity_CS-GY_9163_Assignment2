@@ -5,18 +5,28 @@
     <h1>History</h1>
 
     {% if query_count %}
-        <p id="numqueries"><strong>{{ query_count }}</strong>
+        <p id="numqueries">Total queries recorded: <strong>{{ query_count }}</strong>
     {% endif %}
 
-    <tbody>
-    {% for query in query_result %}
-        <tr>
-            <td>{{query['query_id']}}</td>
-            <td>{{query['user_query']}}</td>
-        </tr>
-        <!-- <p id="query_result"><strong>{{ query_result }}</strong> -->
-    {% endfor %}
-    </tbody>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Query ID:</th>
+                <th scope="col">Query</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for query in query_result %}
+            <tr>
+                <th scope="row" id="{{query['query_id']}}">
+                    {{query['query_id']}}
+                </th>
+                <td>
+                    {{query['user_query']}}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
 
     <div class="row">
         <div class="col-md-4">
