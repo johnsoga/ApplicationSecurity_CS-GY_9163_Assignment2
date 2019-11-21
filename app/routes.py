@@ -48,6 +48,7 @@ def logout():
     db.session.commit()
     session.pop('user_token', None)
     session.pop('username', None)
+    session.pop('search_as', None)
     return redirect(url_for('index'))
 
 @app.route('/register', methods=['GET', 'POST'])
