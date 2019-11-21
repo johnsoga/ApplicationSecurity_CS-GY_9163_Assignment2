@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, session
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, SpellCheckForm
+from app.forms import LoginForm, RegistrationForm, SpellCheckForm, LoginHistoryForm
 from flask_login import current_user, login_user, logout_user, login_required, decode_cookie
 from app.models import User, UserLogin, UserQuery
 from werkzeug.urls import url_parse
@@ -32,6 +32,7 @@ def login():
             return render_template('login.html', title='Sign In', form=form, status=result)
         login_user(user, remember=form.remember_me.data)
         session['user_token'] = secrets.token_urlsafe(32)
+        session['username'] = form.username.data
         user_login = UserLogin(user_id=user.id, session_token=session.get('user_token'))
         db.session.add(user_login)
         db.session.commit()
@@ -41,16 +42,12 @@ def login():
 
 @app.route('/logout')
 def logout():
-    # user_logout = UserLogout(user_id=session['user_id'], session_token=session.get('user_token'))
     logout_user()
     user = UserLogin.query.filter_by(session_token=session.get('user_token')).first()
     user.time_logout = func.now()
-    #
-    # db.session.query().filter(login.user_id == user_id=session['user_id']).update({"time_logout": 'func.now()'})
-    # user.no_of_logins = User.no_of_logins + 1
-
     db.session.commit()
     session.pop('user_token', None)
+    session.pop('username', None)
     return redirect(url_for('index'))
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -130,16 +127,6 @@ def login_history():
         if form.validate_on_submit():
             user = User.query.filter_by(username=form.username.data).first()
             user_id = user.id
-            # q = (session.query(UserLogin, UserLogout)
-            #             .join(UserLogin)
-            #             .join(UserLogout)
-            #             .filter(UserLogin.user_id == UserLogout.user_id)
-            #             .order_by(Group.number)
-            #             .order_by(Member.number)
-            #             ).all()
-            # UserLogin = UserQuery.query.filter_by(user_id=session['user_id'], query_id=query_id).first()
-            #     query_request = userQuery.user_query
-            #     query_result = userQuery.query_result
-
-            return render_template('index.html', title='Home Page', status=result)
-        return render_template('login.html', title='Sign In', form=form)
+            query_result = UserLogin.query.filter_by(user_id=user_id).all()
+            return render_template('login_history.html', title='Login History', query_result=query_result)
+        return render_template('login_history.html', title='Login History', form=form)

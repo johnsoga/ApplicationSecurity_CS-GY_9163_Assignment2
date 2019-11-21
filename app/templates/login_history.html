@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <h1>Login History</h1>
+
+    {% if query_result %}
+    <ol type="1">
+    {% for result in query_result %}
+        <li id="login{{result['login_id']}}">
+            <p id="login{{result['login_id']}}_time">Login Time: {{result['time_login']}} </p>
+            <p id="logout{{result['login_id']}}_time">Logout Time: {{result['time_logout']}}</p>
+        </li>
+    {% endfor %}
+    </ol>
+    {% endif %}
+
+    {% if form %}
+    <div class="row">
+        <div class="col-md-4">
+            {% if form %}
+                {{ wtf.quick_form(form) }}
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}
