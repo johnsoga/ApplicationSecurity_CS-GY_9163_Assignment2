@@ -4,10 +4,21 @@
 {% block app_content %}
     <h1>History</h1>
 
+    {% if user == "admin" %}
+    {% if form %}
+    <div class="row">
+        <div class="col-md-4">
+            {% if form %}
+                {{ wtf.quick_form(form) }}
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
+
     {% if query_count %}
         <p id="numqueries">Total queries recorded: <strong>{{ query_count }}</strong>
     {% endif %}
-
     <table class="table">
         <thead class="thead-dark">
             <tr>

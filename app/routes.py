@@ -109,7 +109,7 @@ def history():
             query_result = UserQuery.query.filter_by(user_id=user_id).all()
             query_count = UserQuery.query.filter_by(user_id=user_id).count()
             return render_template('history.html', title='History', query_count=query_count, query_result=query_result)
-
+        return render_template('history.html', title='History', form=form, user="admin")
     query_count = UserQuery.query.filter_by(user_id=session['user_id']).count()
     query_result = UserQuery.query.filter_by(user_id=session['user_id']).all()
     return render_template('history.html', title='History', query_count=query_count, query_result=query_result)
