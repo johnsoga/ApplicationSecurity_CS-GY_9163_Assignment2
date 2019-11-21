@@ -9,7 +9,11 @@
     {% for result in query_result %}
         <li id="login{{result['login_id']}}">
             <p id="login{{result['login_id']}}_time">Login Time: {{result['time_login']}} </p>
+            {% if result['time_logout'] == None %}
+            <p id="logout{{result['login_id']}}_time">Logout Time: N/A</p>
+            {% else %}
             <p id="logout{{result['login_id']}}_time">Logout Time: {{result['time_logout']}}</p>
+            {% endif %}
         </li>
     {% endfor %}
     </ol>
