@@ -129,7 +129,11 @@ def query(query_id):
 
     user = User.query.filter_by(id=user_id).first()
     username = user.username
-    userQuery = UserQuery.query.filter_by(user_id=user_id, query_id=query_id).first()
+
+    if session.get('username') == "admin":
+        userQuery = UserQuery.query.filter_by(query_id=query_id).first()
+    else:
+        userQuery = UserQuery.query.filter_by(user_id=user_id, query_id=query_id).first()
 
     if userQuery:
         query_request = userQuery.user_query
@@ -137,8 +141,6 @@ def query(query_id):
     else:
         err="Permission Denied"
         return render_template('query.html', title='Query', error=err)
-
-
     return render_template('query.html', title='Query', query_id=query_id, username=username, query_request=query_request, query_result=query_result)
 
 @app.route('/login_history', methods=['GET', 'POST'])
