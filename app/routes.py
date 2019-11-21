@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, session
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, SpellCheckForm, LoginHistoryForm
+from app.forms import LoginForm, RegistrationForm, SpellCheckForm, LoginHistoryForm, QueryHistoryForm
 from flask_login import current_user, login_user, logout_user, login_required, decode_cookie
 from app.models import User, UserLogin, UserQuery
 from werkzeug.urls import url_parse
@@ -102,7 +102,7 @@ def spell_check():
 def history():
     username = session.get('username')
     if username == "admin":
-        form = LoginHistoryForm()
+        form = QueryHistoryForm()
         if form.validate_on_submit():
             user = User.query.filter_by(username=form.username.data).first()
             user_id = user.id
@@ -111,8 +111,10 @@ def history():
             query_count = UserQuery.query.filter_by(user_id=user_id).count()
             return render_template('history.html', title='History', query_count=query_count, query_result=query_result)
         return render_template('history.html', title='History', form=form, user="admin")
+
     query_count = UserQuery.query.filter_by(user_id=session['user_id']).count()
     query_result = UserQuery.query.filter_by(user_id=session['user_id']).all()
+
     return render_template('history.html', title='History', query_count=query_count, query_result=query_result)
 
 @app.route('/history/query<int:query_id>')

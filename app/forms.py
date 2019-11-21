@@ -24,3 +24,7 @@ class SpellCheckForm(FlaskForm):
 class LoginHistoryForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()], id="userid")
     submit = SubmitField('Search')
+
+class QueryHistoryForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()], id="userquery")
+    submit = SubmitField('Search')
