@@ -99,13 +99,13 @@ def spell_check():
 @app.route('/history', methods=['GET', 'POST'])
 @login_required
 def history():
-
     username = session.get('username')
     if username == "admin":
         form = LoginHistoryForm()
         if form.validate_on_submit():
             user = User.query.filter_by(username=form.username.data).first()
             user_id = user.id
+            session['search_as'] = user_id
             query_result = UserQuery.query.filter_by(user_id=user_id).all()
             query_count = UserQuery.query.filter_by(user_id=user_id).count()
             return render_template('history.html', title='History', query_count=query_count, query_result=query_result)
@@ -117,9 +117,13 @@ def history():
 @app.route('/history/query<int:query_id>')
 @login_required
 def query(query_id):
-    user = User.query.filter_by(id=session['user_id']).first()
+
+    user_id=session['user_id']
+    if session.get('username') == "admin":
+        user_id = session.get('search_as')
+    user = User.query.filter_by(id=user_id).first()
     username = user.username
-    userQuery = UserQuery.query.filter_by(user_id=session['user_id'], query_id=query_id).first()
+    userQuery = UserQuery.query.filter_by(user_id=user_id, query_id=query_id).first()
     query_request = userQuery.user_query
     query_result = userQuery.query_result
 
