@@ -107,7 +107,7 @@ def history():
     if username == "admin":
         form = QueryHistoryForm()
         if form.validate_on_submit():
-            if not form.username.data:
+            if form.username.data:
                 user = User.query.filter_by(username=form.username.data).first()
                 user_id = user.id
                 session['search_as'] = user_id
@@ -125,6 +125,7 @@ def query(query_id):
     if session.get('username') == "admin":
         if session.get('search_as'):
             user_id = session.get('search_as')
+            session.pop('search_as', None)
 
     user = User.query.filter_by(id=user_id).first()
     username = user.username
