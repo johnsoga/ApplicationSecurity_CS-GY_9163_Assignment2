@@ -130,8 +130,14 @@ def query(query_id):
     user = User.query.filter_by(id=user_id).first()
     username = user.username
     userQuery = UserQuery.query.filter_by(user_id=user_id, query_id=query_id).first()
-    query_request = userQuery.user_query
-    query_result = userQuery.query_result
+
+    if userQuery:
+        query_request = userQuery.user_query
+        query_result = userQuery.query_result
+    else:
+        err="Permission Denied"
+        return render_template('query.html', title='Query', error=err)
+
 
     return render_template('query.html', title='Query', query_id=query_id, username=username, query_request=query_request, query_result=query_result)
 

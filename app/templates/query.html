@@ -4,18 +4,21 @@
 {% block app_content %}
     <h1>History</h1>
 
-    {% if query_id %}
+    {% if error %}
+        <p id="queryid"><strong>{{ error }}</strong>
+    {% else %}
+        {% if query_id %}
         <p id="queryid"><strong>Query ID: </strong>{{ query_id }}
-    {% endif %}
+        {% endif %}
 
-    {% if username %}
+        {% if username %}
         <p id="username"><strong>Username: </strong>{{ username }}
-    {% endif %}
+        {% endif %}
 
-    {% if query_request %}
+        {% if query_request %}
         <p id="querytext"><strong>Request: </strong>{{ query_request }}
-    {% endif %}
+        {% endif %}
 
         <p id="queryresults"><strong>Result: </strong>{{ query_result }}
-
+    {% endif %}
 {% endblock %}
