@@ -1,6 +1,5 @@
 __pycache__
 migrations
-app.db
 input.txt
 wordlist.txt
 app.db;
