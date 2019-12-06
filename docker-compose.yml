@@ -1,11 +1,17 @@
 version: '3.6'
 services:
-  web:
-    build: .
-    ports:
-      - "8080:5000"
-    secrets:
-      - secret_key
+    webapp:
+        build:
+            context: .
+        image: app:latest
+        container_name: assignment4
+        ports:
+            - "8080:5000"
+        environment:
+            SECRET_KEY: /run/secrets/secret_key
+            FLASK_APP: app.py
+        secrets:
+            - secret_key
 secrets:
-  secret_key:
-    file: ./secret.txt
+    secret_key:
+        file: secret.txt
